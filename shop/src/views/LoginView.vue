@@ -11,11 +11,9 @@
           <label>密碼</label>
           <input v-model="loginPassword" type="password" placeholder="請輸入密碼" required />
         </div>
+        <label class="remember-label"><input type="checkbox" v-model="remember" /> 記住帳號</label>
 
         <div class="login-actions">
-          <label class="remember-label"
-            ><input type="checkbox" v-model="remember" /> 記住帳號</label
-          >
           <button type="submit">登入</button>
         </div>
         <div class="links">
@@ -310,14 +308,15 @@
   .login-actions {
     display: flex;
     justify-content: space-between;
+    flex-direction: column;
     align-items: center;
     font-size: 0.9rem;
-    margin: 1.5rem 0;
   }
   .login-actions button {
-    font-size: 1.8rem;
+    font-size: 2.2rem;
     font-weight: 1200;
-    width: 25%;
+    width: 60%;
+    margin-top: 5%;
   }
   .links {
     width: 100%;
@@ -331,7 +330,7 @@
     margin-top: 10px;
     transition: color 0.3s;
     width: 25%;
-    margin: 3% auto; /* 上 10px，左右自動置中 */
+    margin: 1% auto; /* 上 10px，左右自動置中 */
   }
 
   a:hover {
@@ -348,10 +347,12 @@
   }
   .remember-label {
     display: flex;
-    align-items: center; /* 垂直置中對齊 */
+    align-items: center;
+    justify-content: flex-start; /* ✅ 靠右 */
     gap: 6px; /* 調整 checkbox 和文字間距 */
     cursor: pointer;
     font-size: 1.3rem;
+    margin: 1% 0 0 1%;
   }
   .reg-input {
     display: flex;
