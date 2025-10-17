@@ -4,15 +4,16 @@
     <header>
       <div v-if="!isLoginPage" class="wrapper">
         <nav class="containerfornav">
-          <div class="box" v-for="i in 8" :key="i">
+          <div class="box" v-for="i in 9" :key="i">
             <div v-if="i == 1" class="icon"></div>
             <RouterLink v-if="i == 3" to="/home">首頁</RouterLink>
-            <RouterLink v-if="i == 4" to="/x">我的賣場</RouterLink>
 
-            <RouterLink v-if="i == 5" to="/shop">購物車</RouterLink>
-            <RouterLink v-if="i == 6" to="/login">會員中心</RouterLink>
+            <RouterLink v-if="i == 4" to="/shop">購物車</RouterLink>
+            <RouterLink v-if="i == 5" to="/listupdate">訂單紀錄</RouterLink>
+            <RouterLink v-if="i == 6" to="/test">我的賣場</RouterLink>
+            <RouterLink v-if="i == 7" to="/userupdate">會員中心</RouterLink>
 
-            <RouterLink v-if="i == 8" to="/" class="logout">登出</RouterLink>
+            <RouterLink v-if="i == 9" to="/" class="logout">登出</RouterLink>
           </div>
         </nav>
       </div>
@@ -47,7 +48,7 @@
 
   // 3. 組件掛載後執行
   onMounted(() => {
-    document.title = 'SHOPPING BUY';
+    document.title = 'SHOPING BUY';
   });
 </script>
 <style scoped>

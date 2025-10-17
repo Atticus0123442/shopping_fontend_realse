@@ -177,7 +177,7 @@
     };
     try {
       const res = await fetch('http://localhost:8080/user/changepsd', {
-        method: 'POST',
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' }, // ⚠️ 記得加 header
         body: JSON.stringify(item),
       });

@@ -216,6 +216,10 @@
       }
       // 更新商品
       postorderItem.value.庫存數量 = postorderItem.value.庫存數量 - item.數量;
+      if (postorderItem.value.庫存數量 < 0) {
+        alert('庫存不足，請重新購買');
+        return;
+      }
       try {
         const res = await fetch(`http://localhost:8080/products/${item.商品編號}`, {
           method: 'PUT',

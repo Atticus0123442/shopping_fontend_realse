@@ -12,4 +12,5 @@ export const useUserStore = defineStore('user', {
       this.id = null
     },
   },
+  persist: true, // ⚠️ persist 要放在這裡，不能放在 state 裡
 })

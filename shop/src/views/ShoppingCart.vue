@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <h1 class="title" style="margin: 1px 0; font-weight: 1000">購物車</h1>
+    <h1 class="title" style="font-size: 2.5rem; font-weight: bold; color: var(--c-heading)">
+      購物車
+    </h1>
 
     <div class="layout">
       <section class="panel card">
@@ -31,6 +33,8 @@
 
               <div class="info">
                 <div class="name">{{ item.商品名稱 }}</div>
+                <span class="name">{{ item.商品顏色 }} / </span>
+                <span class="name">{{ item.商品大小 }}</span>
               </div>
 
               <div class="price">{{ fmt(item.價格) }}</div>
@@ -124,6 +128,9 @@
 
   // ----- 設定 -----
   const myuser = ref(userStore.id); // 預設使用者1
+  if (myuser.value == null) {
+    myuser.value = 1;
+  }
 
   // ----- 響應式狀態 -----
   const items = ref([]); // **核心修正：使用 ref 來儲存購物車商品，這是唯一的數據源**
@@ -440,6 +447,7 @@
   .layout {
     display: grid;
     grid-template-columns: 1.6fr 0.8fr;
+    min-height: 82vh;
     gap: 20px;
   }
   /* @media (max-width: 1000px) {
