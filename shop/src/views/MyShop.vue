@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="header">
-      <h1>商品管理中心</h1>
+      <h1>{{ userStore.name }}的商品管理中心</h1>
     </div>
 
     <div class="product-card new-product-card">
@@ -37,7 +37,7 @@
               <div>
                 <div class="little-name">價格</div>
                 <input
-                  v-model.number="newProduct.price"
+                  v-model.number="newProduct.價格"
                   type="number"
                   placeholder="價格"
                   class="input-field"
@@ -46,7 +46,7 @@
               <div>
                 <div class="little-name">庫存</div>
                 <input
-                  v-model.number="newProduct.stock"
+                  v-model.number="newProduct.庫存數量"
                   type="number"
                   placeholder="庫存"
                   class="input-field"
@@ -59,7 +59,7 @@
             <div>
               <div class="little-name">商品名稱</div>
               <input
-                v-model="newProduct.name"
+                v-model="newProduct.商品名稱"
                 type="text"
                 placeholder="商品名稱 *"
                 class="input-field"
@@ -68,7 +68,7 @@
             <div>
               <div class="little-name">商品描述</div>
               <textarea
-                v-model="newProduct.description"
+                v-model="newProduct.商品描述"
                 placeholder="商品描述 *"
                 class="input-field textarea-field"
               ></textarea>
@@ -76,13 +76,17 @@
             <div>
               <div class="little-name">顏色 (逗號分隔)</div>
               <input
-                v-model="newProduct.colors"
+                v-model="newProduct.顏色總類"
                 type="text"
                 placeholder="顏色 (逗號分隔) *"
                 class="input-field"
               />
               <div class="color-preview">
-                <span v-for="(c, i) in parseColors(newProduct.colors)" :key="i" class="color-item">
+                <span
+                  v-for="(c, i) in parseColors(newProduct.顏色總類)"
+                  :key="i"
+                  class="color-item"
+                >
                   <span class="color-dot" :style="{ backgroundColor: c.hex }"></span>
                   <span class="color-name">{{ c.name }}</span>
                 </span>
@@ -91,7 +95,7 @@
             <div>
               <div class="little-name">尺寸 (逗號分隔)</div>
               <input
-                v-model="newProduct.sizes"
+                v-model="newProduct.尺寸總類"
                 type="text"
                 placeholder="尺寸 (逗號分隔) *"
                 class="input-field"
@@ -107,8 +111,8 @@
     <div class="products-list">
       <div v-for="product in products" :key="product.id" class="product-card">
         <div class="card-header">
-          <h3>{{ product.name }}</h3>
-          <span class="product-id">編號: {{ product.id }}</span>
+          <h3>{{ product.商品名稱 }}</h3>
+          <span class="product-id">編號: {{ product.商品編號 }}</span>
         </div>
 
         <div class="card-body">
@@ -116,7 +120,7 @@
             <div class="image-section">
               <div class="image-display">
                 <img
-                  :src="product.preview || `http://localhost:8080/files/view/${product.image}`"
+                  :src="product.preview || `http://localhost:8080/files/view/${product.商品圖片}`"
                   :alt="product.name"
                   class="preview-img"
                   @error="handleImageError"
@@ -131,52 +135,70 @@
                   style="display: none"
                 />
               </label>
-                            <div class="input-row">
-                <div><div class="little-name">價格</div>
-                <input
-                  v-model.number="product.price"
-                  type="number"
-                  placeholder="價格"
-                  class="input-field"
-                /></div>
-                <div><div class="little-name">庫存</div>
-                <input
-                  v-model.number="product.stock"
-                  type="number"
-                  placeholder="庫存"
-                  class="input-field"
-                /></div>
+              <div class="input-row">
+                <div>
+                  <div class="little-name">價格</div>
+                  <input
+                    v-model.number="product.價格"
+                    type="number"
+                    placeholder="價格"
+                    class="input-field"
+                  />
+                </div>
+                <div>
+                  <div class="little-name">庫存</div>
+                  <input
+                    v-model.number="product.庫存數量"
+                    type="number"
+                    placeholder="庫存"
+                    class="input-field"
+                  />
+                </div>
+              </div>
+              <div class="input-row">
+                <button class="btn-listwatch" @click="uprodlist(product)">查看商品訂單</button>
+                <button class="btn-del" @click="deletepd(product)">刪除商品</button>
               </div>
             </div>
 
             <div class="form-section">
               <div>
-              <div class="little-name">商品名稱</div>
-              <input
-                v-model="product.name"
-                type="text"
-                placeholder="商品名稱 *"
-                class="input-field"
-              />
-            </div>
+                <div class="little-name">商品名稱</div>
+                <input
+                  v-model="product.商品名稱"
+                  type="text"
+                  placeholder="商品名稱 *"
+                  class="input-field"
+                />
+              </div>
               <div class="little-name">商品描述</div>
               <textarea
-                v-model="product.description"
+                v-model="product.商品描述"
                 class="input-field textarea-field"
                 placeholder="商品描述"
               ></textarea>
               <div class="little-name">顏色</div>
-              <input v-model="product.colors" type="text" placeholder="顏色" class="input-field" />
+              <input
+                v-model="product.顏色總類"
+                type="text"
+                placeholder="顏色"
+                class="input-field"
+              />
               <div class="color-preview">
-                <span v-for="(c, i) in parseColors(product.colors)" :key="i" class="color-item">
+                <span v-for="(c, i) in parseColors(product.顏色總類)" :key="i" class="color-item">
                   <span class="color-dot" :style="{ backgroundColor: c.hex }"></span>
                   <span class="color-name">{{ c.name }}</span>
                 </span>
               </div>
               <div class="little-name">尺寸</div>
-              <input v-model="product.sizes" type="text" placeholder="尺寸" class="input-field" />
+              <input
+                v-model="product.尺寸總類"
+                type="text"
+                placeholder="尺寸"
+                class="input-field"
+              />
 
-              <p class="upload-time">上架時間: {{ product.uploadTime }}</p>
+              <p class="upload-time">上架時間: {{ product.上架時間 }}</p>
             </div>
           </div>
 
@@ -190,48 +212,69 @@
 </template>
 
 <script setup>
-  import { ref, reactive } from 'vue';
+  import { ref, reactive, onMounted } from 'vue';
+  import { useUserStore } from '@/stores/user';
+  import { useRouter } from 'vue-router';
+  const router = useRouter();
+  const userStore = useUserStore();
+  const myuser = ref(userStore.id);
 
+  onMounted(() => {
+    loadProducts();
+  });
   const products = ref([
-    {
-      id: 16,
-      name: '女裝- BEAVER 短袖上衣',
-      image: '女裝BEAVER 短袖上衣.jpg',
-      description: '短袖上衣以撞色結合經典LOGO印花...',
-      colors: '黑#000000,白#FFFFFF,粉紫#d27497,淺綠#90926F',
-      sizes: 'XS,S,M,L',
-      price: 1584,
-      stock: 0,
-      uploaderId: '1',
-      uploadTime: '2025-10-04 14:58:00.0',
-      file: null,
-      preview: null,
-    },
-    {
-      id: 19,
-      name: '女裝- ORIGINAL 連帽上衣',
-      image: '女裝ORIGINAL連帽上衣.jpg',
-      description: '連帽上衣是衣櫥必備的百搭單品...',
-      colors: '淺紫#c5bef9,粉紫#d27497,淺綠#90926F',
-      sizes: 'XS,S,M,L',
-      price: 1540,
-      stock: 20,
-      uploaderId: '1',
-      uploadTime: '2025-10-04 14:58:00.0',
-      file: null,
-      preview: null,
-    },
+    // {
+    //   id: 16,
+    //   name: '女裝- BEAVER 短袖上衣',
+    //   image: '女裝BEAVER 短袖上衣.jpg',
+    //   description: '短袖上衣以撞色結合經典LOGO印花...',
+    //   colors: '黑#000000,白#FFFFFF,粉紫#d27497,淺綠#90926F',
+    //   sizes: 'XS,S,M,L',
+    //   price: 1584,
+    //   stock: 0,
+    //   uploaderId: '1',
+    //   uploadTime: '2025-10-04 14:58:00.0',
+    //   file: null,
+    //   preview: null,
+    // },
+    // // {
+    // //   id: 19,
+    // //   name: '女裝- ORIGINAL 連帽上衣',
+    // //   image: '女裝ORIGINAL連帽上衣.jpg',
+    // //   description: '連帽上衣是衣櫥必備的百搭單品...',
+    // //   colors: '淺紫#c5bef9,粉紫#d27497,淺綠#90926F',
+    // //   sizes: 'XS,S,M,L',
+    // //   price: 1540,
+    // //   stock: 20,
+    // //   uploaderId: '1',
+    // //   uploadTime: '2025-10-04 14:58:00.0',
+    // //   file: null,
+    // //   preview: null,
+    // // },
   ]);
-
+  async function loadProducts() {
+    if (myuser.value == null) {
+      myuser.value = 1;
+      console.log('使用者未登入，預設為使用者1');
+    }
+    try {
+      const res = await fetch(`http://localhost:8080/products/user/${myuser.value}`);
+      if (!res.ok) throw new Error('伺服器回應錯誤');
+      products.value = await res.json();
+      console.log(products.value);
+    } catch (err) {
+      console.error('讀取失敗：', err);
+    }
+  }
   const newProduct = reactive({
-    name: '',
-    image: '',
-    description: '',
-    colors: '',
-    sizes: '',
-    price: null,
-    stock: null,
-    uploaderId: '1',
+    商品名稱: '',
+    商品圖片: '',
+    商品描述: '',
+    顏色總類: '',
+    尺寸總類: '',
+    價格: null,
+    庫存數量: null,
+    上架者編號: myuser.value,
     file: null,
     preview: null,
   });
@@ -253,15 +296,23 @@
         URL.revokeObjectURL(product.preview);
       }
       product.file = file;
-      product.image = file.name;
+      product.商品圖片 = file.name;
       product.preview = URL.createObjectURL(file);
     }
   };
 
   const validateProduct = (product, isNew = false) => {
-    const requiredFields = ['name', 'description', 'colors', 'sizes', 'price', 'stock'];
+    const requiredFields = [
+      '商品名稱',
+      '商品描述',
+      '顏色總類',
+      '尺寸總類',
+      '價格',
+      '庫存數量',
+      '商品圖片',
+    ];
 
-    if (isNew && !product.file) {
+    if (isNew && !product.商品圖片) {
       alert('請選擇圖片檔案！');
       return false;
     }
@@ -279,7 +330,7 @@
       }
     }
 
-    if (product.price < 0 || product.stock < 0) {
+    if (product.價格 < 0 || product.庫存數量 < 0) {
       alert('價格和庫存不能小於零！');
       return false;
     }
@@ -287,45 +338,108 @@
     return true;
   };
 
-  const createNewProduct = () => {
+  const createNewProduct = async () => {
     if (!validateProduct(newProduct, true)) return;
+    await createNewphoto(newProduct);
+    try {
+      const response = await fetch('http://localhost:8080/products', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newProduct), // 只送第一筆暫存
+      });
 
-    const newId = Math.max(...products.value.map((p) => p.id)) + 1;
-    const now = new Date().toLocaleString();
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
-    const productToAdd = {
-      ...newProduct,
-      id: newId,
-      uploadTime: now,
-      file: null,
-      preview: null,
-    };
+      const data = await response.json();
 
-    products.value.unshift(productToAdd);
+      alert(`商品 ${newProduct.商品名稱} 上傳成功！`);
+      console.log('POST 成功:', data);
+      Object.assign(newProduct, {
+        商品名稱: '',
+        商品圖片: '',
+        商品描述: '',
+        顏色總類: '',
+        尺寸總類: '',
+        價格: null,
+        庫存數量: null,
+        上架者編號: myuser.value,
+      });
+      await loadProducts();
+    } catch (error) {
+      alert(`商品 ${newProduct.商品名稱} 上傳失敗！`);
+      console.error('POST 失敗:', error);
+    }
+  };
+  //圖片上傳
+  const createNewphoto = async (buf_Product) => {
+    if (!buf_Product.file) return;
 
-    Object.assign(newProduct, {
-      name: '',
-      image: '',
-      description: '',
-      colors: '',
-      sizes: '',
-      price: null,
-      stock: null,
-      uploaderId: '1',
-      file: null,
-      preview: null,
+    const formData = new FormData();
+    formData.append('file', buf_Product.file);
+
+    if (buf_Product.商品圖片) {
+      formData.append('oldFileName', buf_Product.商品圖片);
+    }
+
+    const res = await fetch('http://localhost:8080/files/upload', {
+      method: 'POST',
+      body: formData,
     });
 
-    alert(`商品 ${productToAdd.name} (編號: ${newId}) 上傳成功！`);
+    const fileUrl = await res.text();
+
+    // 儲存新檔名，以便下次替換
+    buf_Product.商品圖片 = fileUrl;
+    console.log('圖片上傳成功');
   };
 
-  const updateExistingProduct = (product) => {
+  const updateExistingProduct = async (product) => {
     if (!validateProduct(product, false)) return;
 
-    product.file = null;
-    product.preview = null;
+    if (!validateProduct(product, true)) return;
+    await createNewphoto(product);
+    try {
+      const response = await fetch(`http://localhost:8080/products/${product.商品編號}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(product),
+      });
 
-    alert(`商品 ${product.name} (編號: ${product.id}) 已更新！`);
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+      const data = await response.json();
+
+      console.log('POST 成功:', data);
+      alert(`商品 ${product.商品名稱} 已更新！`);
+      await loadProducts();
+    } catch (error) {
+      alert(`商品 ${product.商品名稱} 上傳失敗！`);
+      console.error('POST 失敗:', error);
+    }
+  };
+  const deletepd = async (product) => {
+    try {
+      const response = await fetch(`http://localhost:8080/products/${product.商品編號}`, {
+        method: 'DELETE',
+      });
+
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+      const data = await response.json();
+
+      console.log('POST 成功:', data);
+      alert(`商品 ${product.商品名稱} 已刪除！`);
+      await loadProducts();
+    } catch (error) {
+      alert(`商品 ${product.商品名稱} 刪除失敗！`);
+      console.error('POST 失敗:', error);
+    }
+  };
+  const uprodlist = (product) => {
+    router.push({
+      path: '/prodlist',
+      query: { id: product.商品編號 },
+    });
   };
 
   const handleImageError = (e) => {
@@ -365,9 +479,11 @@
   .header {
     /* 距離使用 rem/em */
     margin: 0 auto;
+    width: 78%;
 
     color: var(--c-heading);
     text-align: left;
+    white-space: nowrap;
   }
 
   .header h1 {
@@ -417,11 +533,12 @@
     gap: 0.75rem;
     padding: 0.5rem 1.5rem;
     background: linear-gradient(90deg, #d97706 0%, #b91c1c 100%);
-    color: var(--c-white);
+    color: #f8fafc;
   }
 
   .new-header {
     background: linear-gradient(90deg, #16a34a 0%, #059669 100%);
+    color: #f8fafc;
   }
 
   .card-header .icon {
@@ -452,14 +569,14 @@
 
   .card-body {
     /* 距離使用 rem */
-    padding: 1.5rem;
+    padding: 1rem;
+    background-color: #fff8e7;
   }
 
   .content-wrapper {
     display: flex;
     /* 距離使用 rem */
     gap: 1.5rem;
-    margin-bottom: 1.25rem;
     flex-wrap: wrap;
   }
 
@@ -675,27 +792,69 @@
     background: #147548;
     color: #f3f4f6;
     /* 距離使用 rem */
-    margin-top: 1rem;
+    margin-top: 0.5rem;
   }
 
   .btn-create:hover {
-    background: #0dc971;
+    background: linear-gradient(90deg, var(--c-hover) 0%, #0dc971 100%);
     box-shadow: 0 0.25rem 0.625rem rgba(26, 126, 75, 0.3); /* 4px 10px */
   }
 
   .btn-update {
-    background: linear-gradient(90deg, var(--c-primary) 0%, #b91c1c 100%);
-    color: #ccc;
+    background: linear-gradient(90deg, var(--c-primary) 0%, #b9941c 100%);
+    color: #ffffff;
     /* 距離使用 rem */
     margin-top: 1rem;
   }
 
   .btn-update:hover {
-    background: linear-gradient(90deg, var(--c-hover) 0%, #b45309 100%);
+    background: linear-gradient(90deg, var(--c-hover) 0%, #ead360 100%);
+    box-shadow: 0 0.25rem 0.625rem rgba(148, 57, 15, 0.3); /* 4px 10px */
+  }
+  .btn-listwatch {
+    background: #1e8ec2;
+    color: #ffffff;
+    /* 距離使用 rem */
+    margin: 0.5rem auto;
+    width: 80%;
+    /* 距離使用 rem */
+    padding: 1rem 1rem;
+    border: none;
+    /* 尺寸使用 rem */
+    border-radius: 0.5rem;
+    font-weight: 800;
+    font-size: 1.1rem; /* 14px */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 1px;
+  }
+  .btn-listwatch:hover {
+    background: linear-gradient(90deg, var(--c-hover) 0%, #0ba3db 100%);
     box-shadow: 0 0.25rem 0.625rem rgba(148, 57, 15, 0.3); /* 4px 10px */
   }
   .little-name {
     font-size: 1.2rem;
     font-weight: bold;
+  }
+  .btn-del {
+    background: #c2311e;
+    color: #ffffff;
+    /* 距離使用 rem */
+    margin: 0.5rem auto;
+    width: 80%;
+    /* 距離使用 rem */
+    padding: 1rem 1rem;
+    border: none;
+    /* 尺寸使用 rem */
+    border-radius: 0.5rem;
+    font-weight: 800;
+    font-size: 1.1rem; /* 14px */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 1px;
+  }
+  .btn-del:hover {
+    background: linear-gradient(90deg, var(--c-hover) 0%, #db3f0b 100%);
+    box-shadow: 0 0.25rem 0.625rem rgba(148, 57, 15, 0.3); /* 4px 10px */
   }
 </style>
